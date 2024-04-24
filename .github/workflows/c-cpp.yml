@@ -48,8 +48,8 @@ jobs:
   
     - name: Print environment variables
       run: |
-        echo "Include Path: ${{ env.INCLUDE_PATH }}"
-        echo "Library Path: ${{ env.LIBRARY_PATH }}"
+        echo "Include Path: $GITHUB_ENV.INCLUDE_PATH"
+        echo "Library Path: $GITHUB_ENV.LIBRARY_PATH"
         
     - name: List extracted MySQL Connector directories
       run: |
