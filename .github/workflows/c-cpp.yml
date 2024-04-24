@@ -41,10 +41,10 @@ jobs:
     - name: List directory contents
       run: |
         ls "${{github.workspace}}/mysql-connector"
-        ls "${{github.workspace}}/mysql-connector/include"
+        ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
 
     - name: Build with MSBuild
-      run: msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{github.workspace}}/mysql-connector/include;${{env.IncludePath}}"
+      run: msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include;${{env.IncludePath}}"
 
     - name: Run tests
       working-directory: ./x64/Release/
