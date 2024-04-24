@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: windows-2022
 
+    env:
+      INCLUDE_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.39.33519\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared;D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include\mysql
+      LIBRARY_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.39.33519\lib\x64;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64;D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib
+
     steps:
     - uses: actions/checkout@v2
 
@@ -17,7 +21,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         toolset: '14.3'
-
+        
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
 
@@ -39,21 +43,6 @@ jobs:
       run: |
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
-
-    - name: Set up MySQL paths and Visual Studio SDK paths
-      run: |
-        $INCLUDE_PATH = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.39.33519\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared;D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include\mysql"
-        $LIBRARY_PATH = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.39.33519\lib\x64;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64;D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib"
-      shell: pwsh
-  
-    - name: Print environment variables
-      run: |
-        echo "$INCLUDE_PATH"
-        echo "$LIBRARY_PATH"
-        
-    - name: List extracted MySQL Connector directories
-      run: |
-        tree "${{github.workspace}}/mysql-connector"
 
     - name: Build with MSBuild
       run: |
