@@ -28,11 +28,11 @@ jobs:
 
     - name: Download MySQL Connector
       run: |
-        Invoke-WebRequest -Uri "https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-connector-c-8.0.25-winx64.zip" -OutFile "mysql-connector.zip"
+        curl -L -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.25-winx64.zip
     
     - name: Extract MySQL Connector
       run: |
-        Expand-Archive -Path mysql-connector.zip -DestinationPath ${{github.workspace}}/mysql-connector
+        Expand-Archive -Path mysql.zip -DestinationPath ${{github.workspace}}/mysql-connector
 
     - name: Set environment variables
       run: |
