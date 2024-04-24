@@ -44,6 +44,12 @@ jobs:
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
 
+    - name: Print environment variables
+      run: |
+        echo "IncludePath=${{ env.INCLUDE_PATH }}"
+        echo "LibraryPath=${{ env.LIBRARY_PATH }}"
+      shell: pwsh
+
     - name: Build with MSBuild
       run: |
         msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{ env.INCLUDE_PATH }}" /p:LibraryPath="${{ env.LIBRARY_PATH }}" /p:AdditionalDependencies="libmysql.lib"
