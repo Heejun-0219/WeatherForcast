@@ -26,20 +26,25 @@ jobs:
     - name: Install Google Test
       run: nuget install Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn -Version 1.8.1.7
 
-    - name: Download MySQL
+    - name: Download MySQL Connector
       run: |
-          curl -L -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.25-winx64.zip
+        Invoke-WebRequest -Uri "https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-connector-c-8.0.25-winx64.zip" -OutFile "mysql-connector.zip"
+    
+    - name: Extract MySQL Connector
+      run: |
+        Expand-Archive -Path mysql-connector.zip -DestinationPath ${{github.workspace}}/mysql-connector
 
-    - name: Set PATH
+    - name: Set environment variables
       run: |
-        echo "${{github.workspace}}/mysql/bin" >> $GITHUB_PATH
-
-    - name: Extract MySQL
+        echo "MYSQL_HOME=${{github.workspace}}/mysql-connector" >> $GITHUB_ENV
+        echo "PATH=${{github.workspace}}/mysql-connector/bin;$PATH" >> $GITHUB_ENV
+    - name: List directory contents
       run: |
-          Expand-Archive -Path mysql.zip -DestinationPath ${{github.workspace}}/mysql
+        ls "${{github.workspace}}/mysql-connector"
+        ls "${{github.workspace}}/mysql-connector/include"
 
     - name: Build with MSBuild
-      run: msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64"
+      run: msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{github.workspace}}/mysql-connector/include;${{env.IncludePath}}"
 
     - name: Run tests
       working-directory: ./x64/Release/
