@@ -45,6 +45,18 @@ jobs:
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
 
+    - name: List Windows SDK Libraries
+      run: |
+        ls "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64"
+        ls "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64"
+      shell: pwsh
+    
+    - name: Print Environment Paths
+      run: |
+        echo "LIB Path: $env:LIB"
+        echo "System Path: $env:PATH"
+      shell: pwsh
+
     - name: Set Library Paths
       run: |
         echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64" >> $env:LIB
