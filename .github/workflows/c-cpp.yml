@@ -49,8 +49,8 @@ jobs:
       run: |
         $vsPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
         $sdkPath = "C:\Program Files (x86)\Windows Kits\10"
-        echo "IncludePath=D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include;${vsPath}\VC\Tools\MSVC\14.3.xxxxx\include;${sdkPath}\Include\10.0.19041.0\ucrt;${sdkPath}\Include\10.0.19041.0\um;${sdkPath}\Include\10.0.19041.0\shared;$(WindowsSDK_IncludePath)" >> $GITHUB_ENV
-        echo "LibraryPath=D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib;${vsPath}\VC\Tools\MSVC\14.3.xxxxx\lib\x64;${sdkPath}\Lib\10.0.19041.0\ucrt\x64;${sdkPath}\Lib\10.0.19041.0\um\x64;$(WindowsSDK_LibraryPath_x64)" >> $GITHUB_ENV
+        echo "IncludePath=D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include;${vsPath}\VC\Tools\MSVC\14.3.xxxxx\include;${sdkPath}\Include\10.0.19041.0\ucrt;${sdkPath}\Include\10.0.19041.0\um;${sdkPath}\Include\10.0.19041.0\shared;" >> $GITHUB_ENV
+        echo "LibraryPath=D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib;${vsPath}\VC\Tools\MSVC\14.3.xxxxx\lib\x64;${sdkPath}\Lib\10.0.19041.0\ucrt\x64;${sdkPath}\Lib\10.0.19041.0\um\x64;" >> $GITHUB_ENV
 
     - name: Build with MSBuild
       run: |
