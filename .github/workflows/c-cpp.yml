@@ -73,9 +73,8 @@ jobs:
     
     - name: Build with MSBuild
       run: |
-        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="$env:INCLUDE_PATH" /p:LibraryPath="$env:LIBRARY_PATH" /p:AdditionalDependencies="libmysql.lib"
+        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{ env.INCLUDE_PATH }}" /p:LibraryPath="${{ env.LIBRARY_PATH }}" /p:AdditionalDependencies="libmysql.lib"
       shell: pwsh
-
 
     - name: Run Tests
       working-directory: ./x64/Release/
