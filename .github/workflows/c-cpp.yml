@@ -8,17 +8,15 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
         
-    - name: Setup MSBuild and Windows SDK
-      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Setup Visual Studio Build Tools
+      uses: ilammy/msvc-dev-cmd@v1
       with:
-        vs-version: '17.0'
-
+        toolset: '14.3'  # Corresponds to Visual Studio 2022
 
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
@@ -37,37 +35,34 @@ jobs:
       run: |
         Expand-Archive -Path mysql.zip -DestinationPath ${{github.workspace}}/mysql-connector
 
-    - name: Set environment variables
+    - name: Set Environment Variables
       run: |
         echo "MYSQL_HOME=${{github.workspace}}/mysql-connector" >> $GITHUB_ENV
         echo "PATH=${{github.workspace}}/mysql-connector/bin;$PATH" >> $GITHUB_ENV
-        
-    - name: List directory contents
+
+    - name: List Directory Contents
       run: |
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
-    
+
     - name: Set Library Paths
       run: |
         echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64" >> $env:LIB
         echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64" >> $env:LIB
-    
-    - name: Output configured paths
+
+    - name: Output Configured Paths
       run: |
         echo "Path to executables: $env:PATH"
         echo "Path to libraries: $env:LIB"
 
     - name: Build with MSBuild
       run: |
-        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include" /p:LibraryPath="D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib" /p:AdditionalDependencies="libmysql.lib"
+        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include" /p:LibraryPath="${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/lib" /p:AdditionalDependencies="libmysql.lib"
       shell: pwsh
-      env:
-        NUGET: C:\hostedtoolcache\windows\nuget.exe\6.9.1\x64\nuget.exe
 
-    - name: Run tests
+    - name: Run Tests
       working-directory: ./x64/Release/
       run: |
         WeatherForcastGoogleTest.exe
         echo "Tests completed!"
       shell: pwsh
-
