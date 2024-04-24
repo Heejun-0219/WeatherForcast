@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+        
     - name: Set up MSBuild path
       uses: microsoft/setup-msbuild@v1.0.2
 
@@ -26,13 +26,25 @@ jobs:
     - name: Install Google Test
       run: nuget install Microsoft.googletest.v140.windesktop.msvcstl.static.rt-dyn -Version 1.8.1.7
 
+    - name: Download MySQL
+      run: |
+          curl -L -o mysql.zip https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.25-winx64.zip
+
+    - name: Set PATH
+      run: |
+        echo "${{github.workspace}}/mysql/bin" >> $GITHUB_PATH
+
+    - name: Extract MySQL
+      run: |
+          Expand-Archive -Path mysql.zip -DestinationPath ${{github.workspace}}/mysql
+
     - name: Build with MSBuild
-      run: msbuild WeatherForcast.sln /p:Configuration=Release
+      run: msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64"
 
     - name: Run tests
-      working-directory: ./x64/Debug/
+      working-directory: ./x64/Release/
       run: |
-        .\WeatherForcastGoogleTest.exe
+        WeatherForcastGoogleTest.exe
         echo "Tests completed!"
       shell: pwsh
 
