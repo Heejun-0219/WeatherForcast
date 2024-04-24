@@ -61,21 +61,21 @@ jobs:
         $sqlInclude = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
         $sqlLib = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/lib"
     
-        "INCLUDE_PATH=$vcIncludePath;$sdkIncludePath\ucrt;$sdkIncludePath\um;$sdkIncludePath\shared;$sqlInclude" | Out-File -FilePath $env:GITHUB_ENV -Append
-        "LIBRARY_PATH=$vcLibPath;$sdkLibPath;$sdkUMPath;$sqlLib" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "INCLUDE_PATH=$vcIncludePath;$sdkIncludePath\ucrt;$sdkIncludePath\um;$sdkIncludePath\shared;$sqlInclude" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "LIBRARY_PATH=$vcLibPath;$sdkLibPath;$sdkUMPath;$sqlLib" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
     
     - name: Output configured paths
       run: |
-        echo "Include path: ${{ env.INCLUDE_PATH }}"
-        echo "Library path: ${{ env.LIBRARY_PATH }}"
+        echo "Include path: $env:INCLUDE_PATH"
+        echo "Library path: $env:LIBRARY_PATH"
       shell: pwsh
-
-
+    
     - name: Build with MSBuild
       run: |
-        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{ env.IncludePath }}" /p:LibraryPath="${{ env.LibraryPath }}" /p:AdditionalDependencies="libmysql.lib"
+        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="$env:INCLUDE_PATH" /p:LibraryPath="$env:LIBRARY_PATH" /p:AdditionalDependencies="libmysql.lib"
       shell: pwsh
+
 
     - name: Run Tests
       working-directory: ./x64/Release/
