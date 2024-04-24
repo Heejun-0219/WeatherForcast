@@ -13,6 +13,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Setup Visual Studio Build Tools
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        toolset: '14.3'
+
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
 
