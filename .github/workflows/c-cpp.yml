@@ -13,11 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
         
-    - name: Setup Visual Studio Build Tools
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        toolset: '14.3'  # Corresponds to Visual Studio 2022
-
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
 
@@ -45,31 +40,14 @@ jobs:
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
 
-    - name: List Windows SDK Libraries
+    - name: Set up MySQL paths
       run: |
-        ls "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64"
-        ls "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64"
-      shell: pwsh
-    
-    - name: Print Environment Paths
-      run: |
-        echo "LIB Path: $env:LIB"
-        echo "System Path: $env:PATH"
-      shell: pwsh
-
-    - name: Set Library Paths
-      run: |
-        echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64" >> $env:LIB
-        echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64" >> $env:LIB
-
-    - name: Output Configured Paths
-      run: |
-        echo "Path to executables: $env:PATH"
-        echo "Path to libraries: $env:LIB"
+        echo "IncludePath=D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)" >> $GITHUB_ENV
+        echo "LibraryPath=D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)" >> $GITHUB_ENV
 
     - name: Build with MSBuild
       run: |
-        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include" /p:LibraryPath="${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/lib" /p:AdditionalDependencies="libmysql.lib"
+        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="${{ env.IncludePath }}" /p:LibraryPath="${{ env.LibraryPath }}" /p:AdditionalDependencies="libmysql.lib"
       shell: pwsh
 
     - name: Run Tests
