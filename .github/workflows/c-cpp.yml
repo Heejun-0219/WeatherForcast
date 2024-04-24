@@ -38,14 +38,15 @@ jobs:
       run: |
         echo "MYSQL_HOME=${{github.workspace}}/mysql-connector" >> $GITHUB_ENV
         echo "PATH=${{github.workspace}}/mysql-connector/bin;$PATH" >> $GITHUB_ENV
+        
     - name: List directory contents
       run: |
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
-    
+
     - name: Build with MSBuild
       run: |
-        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include"
+        msbuild WeatherForcast.sln /p:Configuration=Release /p:Platform="x64" /p:IncludePath="D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\include" /p:LibraryPath="D:\a\WeatherForcast\WeatherForcast\mysql-connector\mysql-8.0.25-winx64\lib;$LibraryPath" /p:AdditionalDependencies="libmysql.lib;%(AdditionalDependencies)"
       shell: pwsh
       env:
         NUGET: C:\hostedtoolcache\windows\nuget.exe\6.9.1\x64\nuget.exe
