@@ -14,8 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
         
-    - name: Set up MSBuild path
+    - name: Setup MSBuild and Windows SDK
       uses: microsoft/setup-msbuild@v1.0.2
+      with:
+        vs-version: '17.0'
+
 
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.5
@@ -43,6 +46,16 @@ jobs:
       run: |
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
+    
+    - name: Set Library Paths
+      run: |
+        echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64" >> $env:LIB
+        echo "C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64" >> $env:LIB
+    
+    - name: Output configured paths
+      run: |
+        echo "Path to executables: $env:PATH"
+        echo "Path to libraries: $env:LIB"
 
     - name: Build with MSBuild
       run: |
