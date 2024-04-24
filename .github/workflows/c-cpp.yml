@@ -60,9 +60,10 @@ jobs:
     
         $sqlInclude = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
         $sqlLib = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/lib"
-    
-        echo "INCLUDE_PATH=$vcIncludePath;$sdkIncludePath\ucrt;$sdkIncludePath\um;$sdkIncludePath\shared;$sqlInclude" | Out-File -FilePath $env:GITHUB_ENV -Append
-        echo "LIBRARY_PATH=$vcLibPath;$sdkLibPath;$sdkUMPath;$sqlLib" | Out-File -FilePath $env:GITHUB_ENV -Append
+        # $vcIncludePath;$sdkIncludePath\ucrt;$sdkIncludePath\um;$sdkIncludePath\shared;
+        # $vcLibPath;$sdkLibPath;$sdkUMPath;
+        echo "INCLUDE_PATH=$sqlInclude" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "LIBRARY_PATH=$sqlLib" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
     
     - name: Output configured paths
