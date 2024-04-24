@@ -23,7 +23,7 @@ jobs:
         echo "Dependencies installed!"
 
     - name: Build with MSBuild
-      run: msbuild YourSolution.sln /p:Configuration=Release
+      run: msbuild WeatherForcast.sln /p:Configuration=Release
 
     - name: Run tests
       run: |
