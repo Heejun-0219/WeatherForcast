@@ -30,6 +30,9 @@ jobs:
       run: msbuild WeatherForcast.sln /p:Configuration=Release
 
     - name: Run tests
+      working-directory: ./x64/Debug/
       run: |
-        .\Debug\WeatherForcastGoogleTest.exe
+        .\WeatherForcastGoogleTest.exe
         echo "Tests completed!"
+      shell: pwsh
+
