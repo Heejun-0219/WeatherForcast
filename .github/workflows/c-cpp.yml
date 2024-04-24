@@ -45,11 +45,6 @@ jobs:
         ls "${{github.workspace}}/mysql-connector"
         ls "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
 
-    - name: Set up MySQL paths
-      run: |
-        $sqlInclude = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
-        #sqlLib = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/lib"
-
     - name: Set up Visual Studio and SDK paths
       run: |
         $vsPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
@@ -63,9 +58,19 @@ jobs:
         $sdkLibPath = Join-Path $sdkPath "Lib\10.0.19041.0\ucrt\x64"
         $sdkUMPath = Join-Path $sdkPath "Lib\10.0.19041.0\um\x64"
     
-        echo "INCLUDE_PATH=$vcIncludePath;$sdkIncludePath\ucrt;$sdkIncludePath\um;$sdkIncludePath\shared;$sqlInclude" >> $GITHUB_ENV
-        echo "LIBRARY_PATH=$vcLibPath;$sdkLibPath;$sdkUMPath;$sqlLib" >> $GITHUB_ENV
+        $sqlInclude = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/include"
+        $sqlLib = "${{github.workspace}}/mysql-connector/mysql-8.0.25-winx64/lib"
+    
+        "INCLUDE_PATH=$vcIncludePath;$sdkIncludePath\ucrt;$sdkIncludePath\um;$sdkIncludePath\shared;$sqlInclude" | Out-File -FilePath $env:GITHUB_ENV -Append
+        "LIBRARY_PATH=$vcLibPath;$sdkLibPath;$sdkUMPath;$sqlLib" | Out-File -FilePath $env:GITHUB_ENV -Append
       shell: pwsh
+    
+    - name: Output configured paths
+      run: |
+        echo "Include path: ${{ env.INCLUDE_PATH }}"
+        echo "Library path: ${{ env.LIBRARY_PATH }}"
+      shell: pwsh
+
 
     - name: Build with MSBuild
       run: |
